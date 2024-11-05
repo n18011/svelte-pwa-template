@@ -1,6 +1,15 @@
 <script lang="ts">
 	import '../app.css';
-	let { children } = $props();
+	import { onMount } from 'svelte';
+	import { registerServiceWorker, subscribeToPushNotifications } from '$lib/pwa';
+
+	onMount(async () => {
+		const registration = await registerServiceWorker();
+		if (registration) {
+			await subscribeToPushNotifications(registration);
+		}
+	});
 </script>
 
-{@render children()}
+<!-- {@render children()} -->
+<slot />
