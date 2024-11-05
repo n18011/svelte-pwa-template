@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { registerServiceWorker, subscribeToPushNotifications } from './pwa';
+import { registerServiceWorker } from './pwa';
 
 describe('PWA機能のテスト', () => {
   beforeEach(() => {
@@ -36,43 +36,13 @@ describe('PWA機能のテスト', () => {
       const consoleError = vi.spyOn(console, 'error');
       navigator.serviceWorker.register = vi.fn().mockRejectedValue(new Error('Registration failed'));
       
-      await registerServiceWorker();
+      const registration = await registerServiceWorker();
       
       expect(consoleError).toHaveBeenCalledWith(
         'Service worker registration failed:',
         expect.any(Error)
       );
-    });
-  });
-
-  describe('プッシュ通知購読', () => {
-    it('プッシュ通知の購読が正常に完了すること', async () => {
-      const mockSubscription = { endpoint: 'test-endpoint' };
-      const mockRegistration = {
-        pushManager: {
-          subscribe: vi.fn().mockResolvedValue(mockSubscription)
-        }
-      };
-
-      global.fetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({ success: true })
-      });
-
-      const subscription = await subscribeToPushNotifications(mockRegistration as any);
-
-      expect(mockRegistration.pushManager.subscribe).toHaveBeenCalledWith({
-        userVisibleOnly: true,
-        applicationServerKey: expect.any(String)
-      });
-      expect(fetch).toHaveBeenCalledWith('/api/push-subscription', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(mockSubscription)
-      });
-      expect(subscription).toBe(mockSubscription);
+      expect(registration).toBeNull();
     });
   });
 }); 

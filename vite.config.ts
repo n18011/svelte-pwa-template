@@ -66,9 +66,11 @@ export default defineConfig({
 				'**/*.spec.ts'
 			]
 		},
-		deps: {
-			inline: [/^(?!.*vitest).*$/]
-		},
+    server: {
+      deps: {
+        inline: [/^(?!.*vitest).*$/]
+      }
+    },
 		mockReset: true,
 		restoreMocks: true,
 		clearMocks: true
