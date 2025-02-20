@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
 	plugins: [
 		sveltekit(),
-		VitePWA({
+		VitePWA({	
 			registerType: 'autoUpdate',
 			manifest: {
 				name: 'SvelteKit PWA Template',

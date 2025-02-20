@@ -1,12 +1,12 @@
 <script lang="ts">
 	import '../app.css';
 	import { onMount } from 'svelte';
-	import { registerServiceWorker, subscribeToPushNotifications } from '$lib/pwa';
+	import { registerServiceWorker } from '$lib/pwa';
+	import { browser } from '$app/environment';
 
 	onMount(async () => {
-		const registration = await registerServiceWorker();
-		if (registration) {
-			await subscribeToPushNotifications(registration);
+		if (browser) {
+			await registerServiceWorker();
 		}
 	});
 </script>

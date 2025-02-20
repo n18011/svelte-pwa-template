@@ -48,13 +48,13 @@ describe('PWA機能のテスト', () => {
       (navigator.serviceWorker.register as unknown as ReturnType<typeof vi.fn>)
         .mockRejectedValue(expectedError);
       
-      const registration = await registerServiceWorker();
+      const result = await registerServiceWorker();
       
-      expect(consoleError).toHaveBeenCalledWith(
-        'Service worker registration failed:',
-        expectedError
-      );
-      expect(registration).toBeNull();
+      // 戻り値の確認
+      expect(result).toBeNull();
+      
+      // コンソール出力の確認を実装に合わせる
+      expect(consoleError).toHaveBeenCalledWith('Service Worker registration failed:', expectedError);
       
       // モックをリストア
       consoleError.mockRestore();
