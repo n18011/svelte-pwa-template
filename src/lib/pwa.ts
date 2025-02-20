@@ -1,5 +1,4 @@
 export async function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js');
       return registration;
@@ -7,8 +6,6 @@ export async function registerServiceWorker() {
       console.error('Service worker registration failed:', error);
       return null;
     }
-  }
-  return null;
 }
 
 export async function subscribeToPushNotifications(registration: ServiceWorkerRegistration) {

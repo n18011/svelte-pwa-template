@@ -1,12 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { registerServiceWorker } from './pwa';
+import { registerServiceWorker } from './pwa.js';
 
 describe('PWA機能のテスト', () => {
   beforeEach(() => {
-    // Service Worker APIのモック
+    // Service Worker APIのモックをより完全な形で実装
     vi.stubGlobal('navigator', {
       serviceWorker: {
         register: vi.fn(),
+        ready: Promise.resolve({
+          pushManager: {
+            subscribe: vi.fn()
+          }
+        })
       }
     });
   });
@@ -20,11 +25,13 @@ describe('PWA機能のテスト', () => {
     it('Service Workerが正常に登録されること', async () => {
       const mockRegistration = {
         pushManager: {
-          subscribe: vi.fn()
+          subscribe: vi.fn().mockResolvedValue({})
         }
       };
       
-      navigator.serviceWorker.register = vi.fn().mockResolvedValue(mockRegistration);
+      // モック関数の型アサーション追加
+      (navigator.serviceWorker.register as unknown as ReturnType<typeof vi.fn>)
+        .mockResolvedValue(mockRegistration);
       
       const registration = await registerServiceWorker();
       
@@ -33,16 +40,24 @@ describe('PWA機能のテスト', () => {
     });
 
     it('Service Worker登録に失敗した場合エラーハンドリングされること', async () => {
-      const consoleError = vi.spyOn(console, 'error');
-      navigator.serviceWorker.register = vi.fn().mockRejectedValue(new Error('Registration failed'));
+      // コンソールエラーの出力を抑制
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const expectedError = new Error('Registration failed');
+      
+      // モック関数の型アサーション追加
+      (navigator.serviceWorker.register as unknown as ReturnType<typeof vi.fn>)
+        .mockRejectedValue(expectedError);
       
       const registration = await registerServiceWorker();
       
       expect(consoleError).toHaveBeenCalledWith(
         'Service worker registration failed:',
-        expect.any(Error)
+        expectedError
       );
       expect(registration).toBeNull();
+      
+      // モックをリストア
+      consoleError.mockRestore();
     });
   });
 }); 

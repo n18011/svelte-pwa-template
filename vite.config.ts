@@ -8,7 +8,7 @@ export default defineConfig({
 		VitePWA({
 			registerType: 'autoUpdate',
 			manifest: {
-				name: 'blessing',
+				name: 'God bless you',
 				short_name: 'blessing',
 				description: 'お誕生日を祝おう!!',
 				theme_color: '#ffffff',
