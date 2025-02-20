@@ -8,9 +8,9 @@ export default defineConfig({
 		VitePWA({
 			registerType: 'autoUpdate',
 			manifest: {
-				name: 'God bless you',
-				short_name: 'blessing',
-				description: 'お誕生日を祝おう!!',
+				name: 'SvelteKit PWA Template',
+				short_name: 'PWA Template',
+				description: 'SvelteKit PWA Template Application',
 				theme_color: '#ffffff',
 				icons: [
 					{
@@ -35,7 +35,7 @@ export default defineConfig({
 				globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
 				runtimeCaching: [
 					{
-						urlPattern: /^https:\/\/api\.your-domain\.com\/.*/i,
+						urlPattern: /^https:\/\/api\.example\.com\/.*/i,
 						handler: 'NetworkFirst',
 						options: {
 							cacheName: 'api-cache',
